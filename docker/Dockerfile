@@ -10,12 +10,11 @@ ARG APP_VERSION=1.0
 
 WORKDIR /app
 
-COPY --from=build /build/target/books-*.jar /app/
+COPY --from=build /build/target/books-*.jar /app/books.jar
 
 EXPOSE 8080
 
 ENV JAR_VERSION=${APP_VERSION}
 ENV DB_URL=jdbc:mysql://db:3306/books
 
-CMD java -jar -Dspring.datasource.url=${DB_URL} books-${JAR_VERSION}.jar
-
+CMD ["java", "-jar", "books.jar", "--spring.datasource.url=${DB_URL}"]
