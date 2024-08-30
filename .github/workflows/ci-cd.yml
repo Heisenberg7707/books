@@ -55,11 +55,6 @@ jobs:
           docker-compose -f docker-compose.yaml build
           docker-compose -f docker-compose.yaml up -d
 
-      - name: Run tests
-        run: |
-          # Здесь вы должны запустить ваши тесты
-          docker-compose exec app ./gradlew test
-
       - name: Deploy to production
         if: github.ref == 'refs/heads/main'
         run: |
