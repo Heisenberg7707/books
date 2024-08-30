@@ -42,7 +42,7 @@ jobs:
 
       # Шаг 6: Запуск docker-compose
       - name: Run Docker Compose
-        run: docker-compose up
+        run: docker-compose up --build -d
 
       # Шаг 7: Проверка доступности приложения
       - name: Wait for application to be available
@@ -62,4 +62,6 @@ jobs:
       # Шаг 8: Остановка и удаление контейнеров Docker Compose после завершения
       - name: Cleanup
         if: always()
-        run: docker-compose -f docker-compose.yaml down
+        run: docker-compose down
+		
+		
