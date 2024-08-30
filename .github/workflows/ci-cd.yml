@@ -34,6 +34,4 @@ jobs:
       - name: Push Docker image
         run: docker push heisenberg7709/library-management
 
-      - name: Deploy to Server
-        run: |
-          ssh user@yourserver "docker pull heisenberg7709/library-management && docker-compose -f docker-compose.yml up -d"
+
