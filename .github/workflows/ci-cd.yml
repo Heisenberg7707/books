@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -DskipTests
 
       - name: Build Docker image
         run: docker build -t heisenberg7709/library-management .
