@@ -3,43 +3,48 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - '*'
+      - '*'  # триггер на все ветки
   pull_request:
     branches:
-      - main
+      - main  # триггер на pull requests в ветку main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Шаг 1: Проверка репозитория
       - uses: actions/checkout@v3
 
+      # Шаг 2: Установка JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
 
+      # Шаг 3: Сборка приложения с помощью Maven
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
-      - name: Build Docker image
-        run: docker build -t heisenberg7709/library-management -f docker/Dockerfile .
+      # Шаг 4: Установка Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
 
+      # Шаг 5: Логин в Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Push Docker image
-        run: docker push heisenberg7709/library-management
+      # Шаг 6: Запуск docker-compose
+      - name: Run Docker Compose
+        run: docker-compose -f docker-compose.yml up --build -d
 
-      - name: Run Docker container
-        run: |
-          docker run -d -p 8080:8080 heisenberg7709/library-management
-
+      # Шаг 7: Проверка доступности приложения
       - name: Wait for application to be available
         run: |
           for i in {1..30}; do
@@ -51,4 +56,10 @@ jobs:
               sleep 10
             fi
           done
+          echo "Application did not start in time"
           exit 1
+
+      # Шаг 8: Остановка и удаление контейнеров Docker Compose после завершения
+      - name: Cleanup
+        if: always()
+        run: docker-compose -f docker-compose.yml down
