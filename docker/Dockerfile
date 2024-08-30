@@ -4,17 +4,16 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 COPY src ./src
 RUN mvn clean package -DskipTests
+RUN ls -l /build/target
 
 FROM eclipse-temurin:17-alpine
-ARG APP_VERSION=1.0
 
 WORKDIR /app
 
-COPY --from=build /build/target/books-*.jar /app/books.jar
+COPY --from=build /build/target/*.jar /app/books.jar
 
 EXPOSE 8080
 
-ENV JAR_VERSION=${APP_VERSION}
 ENV DB_URL=jdbc:mysql://db:3306/books
 
 CMD ["java", "-jar", "books.jar", "--spring.datasource.url=${DB_URL}"]
