@@ -20,6 +20,13 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'adopt-openjdk' # Добавьте эту строку
+          java-package: 'jdk'
+          check-latest: false
+          server-id: 'github'
+          overwrite-settings: true
+          job-status: success
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build with Maven
         run: mvn clean install
