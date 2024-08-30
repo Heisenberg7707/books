@@ -23,5 +23,3 @@ services:
       MYSQL_USER: app_user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: heisenberg7709
-    ports:
-      - "3306:3306"
