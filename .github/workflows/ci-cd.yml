@@ -42,7 +42,7 @@ jobs:
 
       # Шаг 6: Запуск docker-compose
       - name: Run Docker Compose
-        run: docker-compose -f docker-compose.yaml up --build -d
+        run: docker-compose up
 
       # Шаг 7: Проверка доступности приложения
       - name: Wait for application to be available
