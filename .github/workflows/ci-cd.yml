@@ -33,6 +33,11 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/library-management:latest
 
+      - name: Decode kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
+
       - name: Deploy to Minikube
         run: |
           kubectl apply -f kubernetes/mysql-deployment.yaml
@@ -40,4 +45,4 @@ jobs:
           kubectl apply -f kubernetes/deployment.yaml
           kubectl apply -f kubernetes/service.yaml
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG: $HOME/.kube/config
