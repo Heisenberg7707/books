@@ -33,16 +33,30 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/library-management:latest
 
+      - name: Install Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker
+
       - name: Decode kubeconfig
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
 
+      - name: Verify kubectl configuration
+        run: |
+          kubectl config view
+          kubectl cluster-info
+
       - name: Deploy to Minikube
         run: |
-          kubectl apply -f kubernetes/mysql-deployment.yaml --validate=false
-          kubectl apply -f kubernetes/mysql-service.yaml --validate=false
-          kubectl apply -f kubernetes/deployment.yaml --validate=false
-          kubectl apply -f kubernetes/service.yaml --validate=false
+          kubectl apply -f kubernetes/mysql-deployment.yaml
+          kubectl apply -f kubernetes/mysql-service.yaml
+          kubectl apply -f kubernetes/deployment.yaml
+          kubectl apply -f kubernetes/service.yaml
         env:
           KUBECONFIG: $HOME/.kube/config
