@@ -42,11 +42,6 @@ jobs:
         run: |
           minikube start --driver=docker
 
-      - name: Decode kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $HOME/.kube/config
-
       - name: Verify kubectl configuration
         run: |
           kubectl config view
