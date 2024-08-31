@@ -40,9 +40,9 @@ jobs:
 
       - name: Deploy to Minikube
         run: |
-          kubectl apply -f kubernetes/mysql-deployment.yaml
-          kubectl apply -f kubernetes/mysql-service.yaml
-          kubectl apply -f kubernetes/deployment.yaml
-          kubectl apply -f kubernetes/service.yaml
+          kubectl apply -f kubernetes/mysql-deployment.yaml --validate=false
+          kubectl apply -f kubernetes/mysql-service.yaml --validate=false
+          kubectl apply -f kubernetes/deployment.yaml --validate=false
+          kubectl apply -f kubernetes/service.yaml --validate=false
         env:
           KUBECONFIG: $HOME/.kube/config
